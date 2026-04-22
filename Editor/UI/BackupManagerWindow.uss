@@ -1,0 +1,388 @@
+/* ===== Project Backup Manager — Dark Theme (2-Column + Tabs) ===== */
+
+/* ルート: 横並びレイアウト */
+.root {
+    padding: 8px;
+    flex-grow: 1;
+    flex-direction: row;
+    background-color: #1E1E1E;
+    color: #D4D4D4;
+}
+
+/* カラム共通 */
+.column {
+    flex-direction: column;
+}
+
+.left-column {
+    flex-basis: 0;
+    flex-grow: 1;
+    margin-right: 4px;
+}
+
+.right-column {
+    flex-basis: 0;
+    flex-grow: 1;
+    margin-left: 4px;
+}
+
+/* パネル共通 */
+.panel {
+    margin-bottom: 8px;
+    padding: 10px;
+    border-width: 1px;
+    border-color: #3C3C3C;
+    border-radius: 4px;
+    background-color: #252526;
+}
+
+.panel-header {
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom-width: 1px;
+    border-bottom-color: #3C3C3C;
+    color: #CCCCCC;
+}
+
+/* ===== バックアップボタン ===== */
+.primary-btn {
+    padding: 8px 14px;
+    background-color: #0E639C;
+    border-width: 0;
+    border-radius: 3px;
+    color: #FFFFFF;
+    -unity-font-style: bold;
+}
+
+.primary-btn:hover {
+    background-color: #1177BB;
+}
+
+.primary-btn:active {
+    background-color: #0D5689;
+}
+
+/* ===== ステータスバー ===== */
+.status-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 6px 10px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    background-color: #1B1B1B;
+    border-width: 1px;
+    border-color: #333333;
+    border-radius: 3px;
+}
+
+.status-label {
+    font-size: 12px;
+    color: #858585;
+}
+
+.status-label-center {
+    -unity-text-align: middle-center;
+}
+
+.status-label-right {
+    -unity-text-align: middle-right;
+}
+
+/* ===== タブバー ===== */
+.tab-bar {
+    flex-direction: row;
+    margin-bottom: 0;
+    border-bottom-width: 1px;
+    border-bottom-color: #3C3C3C;
+}
+
+.tab-btn {
+    padding: 6px 14px;
+    background-color: transparent;
+    border-width: 0;
+    border-bottom-width: 2px;
+    border-bottom-color: transparent;
+    border-radius: 0;
+    color: #808080;
+    margin-right: 2px;
+}
+
+.tab-btn:hover {
+    color: #CCCCCC;
+    background-color: #2A2A2A;
+}
+
+.tab-btn-active {
+    color: #FFFFFF;
+    border-bottom-color: #4FC1E9;
+    background-color: rgba(79, 193, 233, 0.12);
+}
+
+/* ===== タブコンテンツ ===== */
+.tab-content-wrapper {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.tab-content {
+    flex-grow: 1;
+    padding: 8px;
+    background-color: #252526;
+    border-width: 1px;
+    border-top-width: 0;
+    border-color: #3C3C3C;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.tab-content-hidden {
+    display: none;
+}
+
+/* ===== 設定セクション ===== */
+.settings-section {
+    margin-bottom: 12px;
+}
+
+.settings-section-header {
+    font-size: 13px;
+    -unity-font-style: bold;
+    color: #AAAAAA;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+    border-bottom-width: 1px;
+    border-bottom-color: #333333;
+}
+
+.settings-row {
+    margin-bottom: 4px;
+}
+
+.settings-row > Toggle,
+.settings-row > IntegerField {
+    color: #D4D4D4;
+}
+
+.store-path-scroll {
+    max-height: 28px;
+    background-color: #1E1E1E;
+    border-width: 1px;
+    border-color: #3C3C3C;
+    border-radius: 2px;
+    padding: 4px 6px;
+}
+
+.store-path-fullpath {
+    font-size: 12px;
+    color: #6A9FB5;
+    white-space: nowrap;
+}
+
+.store-path-browse-btn {
+    margin-top: 6px;
+    padding: 4px 12px;
+    background-color: #3C3C3C;
+    border-width: 1px;
+    border-color: #505050;
+    border-radius: 3px;
+    color: #D4D4D4;
+    align-self: flex-start;
+}
+
+/* ===== ヘルプ ===== */
+.help-scroll {
+    flex-grow: 1;
+}
+
+.help-text {
+    font-size: 13px;
+    color: #CCCCCC;
+    white-space: normal;
+    padding: 4px;
+}
+
+/* ===== 世代一覧 ===== */
+.generation-list {
+    flex-grow: 1;
+    min-height: 60px;
+}
+
+.empty-label {
+    color: #5A5A5A;
+    -unity-text-align: middle-center;
+    padding: 20px;
+    font-size: 13px;
+    -unity-font-style: italic;
+}
+
+/* 世代カード */
+.generation-card {
+    padding: 8px 10px;
+    margin-bottom: 2px;
+    border-width: 1px;
+    border-color: #2D2D2D;
+    border-radius: 3px;
+    background-color: #2D2D30;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.generation-card:hover {
+    background-color: #333337;
+    border-color: #464649;
+}
+
+.generation-card-selected {
+    border-color: #0E639C;
+    border-width: 1px;
+    background-color: rgba(14, 99, 156, 0.1);
+}
+
+.generation-card-selected:hover {
+    background-color: rgba(14, 99, 156, 0.15);
+}
+
+.generation-info {
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.generation-timestamp {
+    font-size: 13px;
+    color: #D4D4D4;
+}
+
+.generation-detail {
+    font-size: 11px;
+    color: #808080;
+    margin-top: 2px;
+}
+
+.generation-type-auto {
+    color: #4FC1FF;
+}
+
+.generation-type-manual {
+    color: #6A9955;
+}
+
+.generation-actions {
+    flex-direction: row;
+}
+
+.card-btn {
+    padding: 3px 8px;
+    font-size: 12px;
+    background-color: #3C3C3C;
+    border-width: 1px;
+    border-color: #505050;
+    border-radius: 2px;
+    margin-left: 4px;
+    color: #D4D4D4;
+}
+
+.card-btn:hover {
+    background-color: #505050;
+    border-color: #606060;
+}
+
+.card-btn:active {
+    background-color: #383838;
+}
+
+.card-delete-btn {
+    color: #F48771;
+    border-color: #5A1D1D;
+}
+
+.card-delete-btn:hover {
+    background-color: #5A1D1D;
+    border-color: #7A2E2E;
+}
+
+/* ===== 復元パネル（右カラム） ===== */
+.restore-panel {
+    margin-bottom: 0;
+}
+
+.restore-actions {
+    flex-direction: row;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: #3C3C3C;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    background-color: #3C3C3C;
+    border-width: 1px;
+    border-color: #505050;
+    border-radius: 3px;
+    margin-right: 4px;
+    color: #D4D4D4;
+    min-height: 28px;
+}
+
+.action-btn:hover {
+    background-color: #505050;
+    border-color: #606060;
+}
+
+.action-btn:active {
+    background-color: #3A3A3A;
+}
+
+.danger-btn {
+    background-color: #5A1D1D;
+    border-color: #7A2E2E;
+    color: #F48771;
+}
+
+.danger-btn:hover {
+    background-color: #6E2525;
+    border-color: #943838;
+}
+
+.danger-btn:active {
+    background-color: #4A1818;
+}
+
+/* ===== ファイルツリー ===== */
+.file-tree {
+    flex-grow: 1;
+    min-height: 60px;
+    background-color: #1E1E1E;
+    border-width: 1px;
+    border-color: #3C3C3C;
+    border-radius: 2px;
+    padding: 4px;
+}
+
+.file-entry {
+    flex-direction: row;
+    align-items: center;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+.file-entry:hover {
+    background-color: #2A2D2E;
+}
+
+.file-entry-path {
+    font-size: 12px;
+    color: #CCCCCC;
+    flex-grow: 1;
+    margin-left: 4px;
+}
+
+.file-entry-size {
+    font-size: 11px;
+    color: #606060;
+    min-width: 60px;
+    -unity-text-align: middle-right;
+}

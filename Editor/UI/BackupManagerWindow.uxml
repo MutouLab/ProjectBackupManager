@@ -1,0 +1,75 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="root" class="root">
+
+        <!-- 左カラム -->
+        <ui:VisualElement name="left-column" class="column left-column">
+
+            <!-- バックアップボタン + ステータス -->
+            <ui:Button name="backup-now-btn" text="今すぐバックアップ" class="primary-btn" />
+            <ui:VisualElement name="status-bar" class="status-bar">
+                <ui:Label name="last-backup-label" text="前回: ---" class="status-label" />
+                <ui:Label name="next-backup-label" text="次回: ---" class="status-label status-label-center" />
+                <ui:Label name="store-size-label" text="ストア: ---" class="status-label status-label-right" />
+            </ui:VisualElement>
+
+            <!-- タブバー -->
+            <ui:VisualElement name="tab-bar" class="tab-bar">
+                <ui:Button name="tab-list-btn" text="バックアップ一覧" class="tab-btn tab-btn-active" />
+                <ui:Button name="tab-settings-btn" text="詳細設定" class="tab-btn" />
+                <ui:Button name="tab-help-btn" text="使い方" class="tab-btn" />
+            </ui:VisualElement>
+
+            <!-- タブコンテンツラッパー（高さ統一） -->
+            <ui:VisualElement name="tab-content-wrapper" class="tab-content-wrapper">
+                <!-- タブ: バックアップ一覧 -->
+                <ui:VisualElement name="tab-list-content" class="tab-content">
+                    <ui:ScrollView name="generation-list" class="generation-list" />
+                    <ui:Label name="no-generations-label" text="バックアップはありません" class="empty-label" />
+                </ui:VisualElement>
+
+                <!-- タブ: 詳細設定 -->
+                <ui:VisualElement name="tab-settings-content" class="tab-content tab-content-hidden">
+                    <ui:VisualElement class="settings-section">
+                        <ui:Label text="自動バックアップ" class="settings-section-header" />
+                        <ui:VisualElement class="settings-row">
+                            <ui:Toggle name="auto-backup-toggle" label="有効" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings-row">
+                            <ui:IntegerField name="interval-field" label="間隔（分）" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings-row">
+                            <ui:IntegerField name="max-generations-field" label="最大世代数" tooltip="保持するバックアップの最大数（1〜999）。値が大きいほどディスク容量を消費します。" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="settings-section">
+                        <ui:Label text="保存先" class="settings-section-header" />
+                        <ui:ScrollView mode="Horizontal" class="store-path-scroll">
+                            <ui:Label name="store-path-resolved" text="" class="store-path-fullpath" />
+                        </ui:ScrollView>
+                        <ui:Button name="store-path-browse-btn" text="保存先を変更..." class="store-path-browse-btn" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <!-- タブ: 使い方 -->
+                <ui:VisualElement name="tab-help-content" class="tab-content tab-content-hidden">
+                    <ui:ScrollView class="help-scroll">
+                        <ui:Label name="help-text" class="help-text" />
+                    </ui:ScrollView>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+
+        <!-- 右カラム: 復元 -->
+        <ui:VisualElement name="restore-panel" class="column right-column panel restore-panel">
+            <ui:Label name="restore-header" text="復元" class="panel-header" />
+            <ui:VisualElement name="restore-actions" class="restore-actions">
+                <ui:Button name="restore-selected-btn" text="選択を復元" class="action-btn" />
+                <ui:Button name="restore-all-btn" text="全て復元" class="action-btn" />
+                <ui:Button name="rollback-btn" text="完全ロールバック" class="action-btn danger-btn" />
+            </ui:VisualElement>
+            <ui:ScrollView name="file-tree" class="file-tree" />
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>
