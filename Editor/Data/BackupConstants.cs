@@ -1,3 +1,5 @@
+// Copyright (c) 2026 MutouLab. Licensed under the MIT License.
+// See LICENSE.md in the project root for full license text.
 namespace MutouLab.ProjectBackupManager.Data
 {
     /// <summary>

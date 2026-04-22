@@ -20,7 +20,7 @@
           "vpmDependencies": {},
           "url": "https://github.com/MutouLab/ProjectBackupManager/releases/download/v0.1.0/com.mutoulab.project-backup-manager-0.1.0.zip",
           "repo": "https://mutoulab.github.io/ProjectBackupManager/index.json",
-          "zipSHA256": "778f30a061546b18cf2c2d4f1089375a6bc58168a88b5b379dde34209b13ee3e",
+          "zipSHA256": "f63c1f467e84175e054f2d471b090f3e4e02d7c20cfd2d4f2137fb995eedf01f",
           "changelogUrl": "https://github.com/MutouLab/ProjectBackupManager/releases/tag/v0.1.0"
         }
       }
