@@ -1,6 +1,6 @@
 {
   "name": "com.mutoulab.project-backup-manager",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "Project Backup Manager",
   "description": "VRChatプロジェクト向け自動バックアップ・世代管理・復元ツール",
   "unity": "2022.3",
