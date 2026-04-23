@@ -37,8 +37,8 @@ namespace MutouLab.ProjectBackupManager.Core
         /// <summary>世代マネージャへのアクセス。</summary>
         public GenerationManager Generations => _generationManager;
 
-        /// <summary>バックグラウンドバックアップが実行中かどうか。</summary>
-        public bool IsBackgroundBackupRunning { get; private set; }
+        /// <summary>バックグラウンドバックアップが実行中かどうか（全インスタンス共有）。</summary>
+        public static bool IsBackgroundBackupRunning { get; private set; }
 
         /// <summary>
         /// バックグラウンドスレッドでバックアップを作成する。
@@ -218,6 +218,7 @@ namespace MutouLab.ProjectBackupManager.Core
 
         /// <summary>
         /// 指定ファイルのみを復元する（選択復元）。
+        /// 復元前にオブジェクト存在検証を行い、欠損があればユーザーに警告する。
         /// </summary>
         /// <param name="generationId">復元元の世代ID。</param>
         /// <param name="filePaths">復元するファイルの相対パスリスト。</param>
@@ -233,20 +234,34 @@ namespace MutouLab.ProjectBackupManager.Core
                     return 0;
                 }
 
-                int restored = 0;
+                // 復元対象エントリのオブジェクト存在検証
+                var entriesToRestore = new List<FileEntry>();
+                var missingPaths = new List<string>();
                 for (int i = 0; i < filePaths.Count; i++)
                 {
-                    EditorUtility.DisplayProgressBar(
-                        "ファイル復元中",
-                        $"{filePaths[i]} ({i + 1}/{filePaths.Count})",
-                        (float)i / filePaths.Count);
-
                     FileEntry entry = manifest.FindEntry(filePaths[i]);
                     if (entry == null)
                     {
                         Debug.LogWarning($"[ProjectBackupManager] マニフェストにエントリがありません: {filePaths[i]}");
                         continue;
                     }
+                    if (!_contentStore.Exists(entry.hash))
+                        missingPaths.Add(entry.path);
+                    else
+                        entriesToRestore.Add(entry);
+                }
+
+                if (missingPaths.Count > 0 && !ConfirmMissingObjects(missingPaths))
+                    return 0;
+
+                int restored = 0;
+                for (int i = 0; i < entriesToRestore.Count; i++)
+                {
+                    var entry = entriesToRestore[i];
+                    EditorUtility.DisplayProgressBar(
+                        "ファイル復元中",
+                        $"{entry.path} ({i + 1}/{entriesToRestore.Count})",
+                        (float)i / entriesToRestore.Count);
 
                     string destPath = Path.Combine(_projectRoot, entry.path);
                     if (_contentStore.Retrieve(entry.hash, destPath))
@@ -272,6 +287,7 @@ namespace MutouLab.ProjectBackupManager.Core
         /// <summary>
         /// 完全ロールバックを実行する。
         /// Assets/全体をバックアップ時の状態に復元し、バックアップ後に追加されたファイルの一覧を返す。
+        /// 復元前にオブジェクト存在検証を行い、欠損があればユーザーに警告する。
         /// </summary>
         /// <param name="generationId">復元元の世代ID。</param>
         /// <param name="addedFiles">バックアップ後に追加されたファイルの相対パスリスト（出力）。</param>
@@ -288,6 +304,16 @@ namespace MutouLab.ProjectBackupManager.Core
                     Debug.LogError($"[ProjectBackupManager] 世代が見つかりません: {generationId}");
                     return -1;
                 }
+
+                // オブジェクト存在検証
+                var missingPaths = new List<string>();
+                for (int i = 0; i < manifest.files.Count; i++)
+                {
+                    if (!_contentStore.Exists(manifest.files[i].hash))
+                        missingPaths.Add(manifest.files[i].path);
+                }
+                if (missingPaths.Count > 0 && !ConfirmMissingObjects(missingPaths))
+                    return -1;
 
                 // マニフェスト内のファイルパスをセット化
                 var manifestPaths = new HashSet<string>();
@@ -308,7 +334,7 @@ namespace MutouLab.ProjectBackupManager.Core
                     }
                 }
 
-                // マニフェストのファイルを復元
+                // マニフェストのファイルを復元（欠損オブジェクトはスキップ）
                 int restored = 0;
                 for (int i = 0; i < manifest.files.Count; i++)
                 {
@@ -320,6 +346,9 @@ namespace MutouLab.ProjectBackupManager.Core
                             $"{entry.path} ({i + 1}/{manifest.files.Count})",
                             (float)i / manifest.files.Count);
                     }
+
+                    if (!_contentStore.Exists(entry.hash))
+                        continue;
 
                     string destPath = Path.Combine(_projectRoot, entry.path);
                     if (_contentStore.Retrieve(entry.hash, destPath))
@@ -390,6 +419,28 @@ namespace MutouLab.ProjectBackupManager.Core
             if (bytes < 1024 * 1024) return $"{bytes / 1024.0:F1} KB";
             if (bytes < 1024 * 1024 * 1024) return $"{bytes / (1024.0 * 1024.0):F1} MB";
             return $"{bytes / (1024.0 * 1024.0 * 1024.0):F2} GB";
+        }
+
+        /// <summary>
+        /// 欠損オブジェクトについてユーザーに確認ダイアログを表示する。
+        /// </summary>
+        /// <param name="missingPaths">欠損しているファイルの相対パスリスト。</param>
+        /// <returns>ユーザーが続行を選択した場合true。</returns>
+        private static bool ConfirmMissingObjects(List<string> missingPaths)
+        {
+            string listStr = "";
+            int displayCount = Math.Min(missingPaths.Count, 15);
+            for (int i = 0; i < displayCount; i++)
+                listStr += missingPaths[i] + "\n";
+            if (missingPaths.Count > displayCount)
+                listStr += $"... 他{missingPaths.Count - displayCount}件";
+
+            Debug.LogWarning($"[ProjectBackupManager] {missingPaths.Count}件のオブジェクトが欠損しています");
+
+            return EditorUtility.DisplayDialog(
+                "オブジェクト欠損の警告",
+                $"{missingPaths.Count}件のファイルのバックアップデータが見つかりません。\nこれらのファイルはスキップされます。続行しますか？\n\n{listStr}",
+                "続行", "キャンセル");
         }
 
         /// <summary>
