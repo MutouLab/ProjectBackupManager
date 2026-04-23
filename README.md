@@ -1,5 +1,7 @@
 # Project Backup Manager
 
+[![Add to VCC](https://img.shields.io/badge/Add%20to-VCC-blue?style=for-the-badge)](https://mutoulab.github.io/ProjectBackupManager/index.json)
+
 VRChatプロジェクト向け自動バックアップ・世代管理・復元ツール。
 Unityの予期せぬクラッシュによるデータ紛失を防止します。
 
@@ -47,10 +49,16 @@ https://github.com/MutouLab/ProjectBackupManager.git
 バージョンを固定する場合は末尾にタグを指定:
 
 ```
-https://github.com/MutouLab/ProjectBackupManager.git#v0.1.0
+https://github.com/MutouLab/ProjectBackupManager.git#v0.1.1
 ```
 
 ### 方法 3: VCC（VRChat Creator Companion）
+
+**ワンクリック追加:**
+
+> [![Add to VCC](https://img.shields.io/badge/Add%20to-VCC-blue?style=for-the-badge)](https://mutoulab.github.io/ProjectBackupManager/index.json)
+
+**手動追加:**
 
 1. VCC を開き、`Settings` → `Packages` → `Add Repository`
 2. 以下のURLを入力:
