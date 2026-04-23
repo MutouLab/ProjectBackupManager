@@ -26,16 +26,20 @@ namespace MutouLab.ProjectBackupManager.Core
 
         /// <summary>
         /// ストアディレクトリを作成する（存在しない場合）。
+        /// 前回クラッシュ等で残留した一時ファイルを削除する。
         /// </summary>
         public void EnsureInitialized()
         {
             if (!Directory.Exists(_objectsRoot))
                 Directory.CreateDirectory(_objectsRoot);
+
+            CleanupTempFiles();
         }
 
         /// <summary>
         /// ファイルをストアに格納し、ハッシュ値を返す。
         /// 同一ハッシュのオブジェクトが既に存在する場合はコピーをスキップする。
+        /// Write-Rename パターンにより格納のアトミック性を保証する。
         /// </summary>
         /// <param name="sourceFilePath">格納するファイルの絶対パス。</param>
         /// <returns>ファイル内容のSHA-256ハッシュ値（16進数小文字）。</returns>
@@ -50,7 +54,9 @@ namespace MutouLab.ProjectBackupManager.Core
                 if (!Directory.Exists(destDir))
                     Directory.CreateDirectory(destDir);
 
-                File.Copy(sourceFilePath, destPath, overwrite: false);
+                string tempPath = destPath + ".tmp";
+                File.Copy(sourceFilePath, tempPath, overwrite: true);
+                File.Move(tempPath, destPath);
             }
 
             return hash;
@@ -156,6 +162,31 @@ namespace MutouLab.ProjectBackupManager.Core
             string prefix = hash.Substring(0, BackupConstants.HashPrefixLength);
             string remainder = hash.Substring(BackupConstants.HashPrefixLength);
             return Path.Combine(_objectsRoot, prefix, remainder);
+        }
+
+        /// <summary>
+        /// 前回クラッシュ等で残留した一時ファイルを削除する。
+        /// </summary>
+        private void CleanupTempFiles()
+        {
+            if (!Directory.Exists(_objectsRoot))
+                return;
+
+            foreach (string prefixDir in Directory.GetDirectories(_objectsRoot))
+            {
+                foreach (string tmpFile in Directory.GetFiles(prefixDir, "*.tmp"))
+                {
+                    try
+                    {
+                        File.Delete(tmpFile);
+                        Debug.Log($"[ProjectBackupManager] 残留一時ファイルを削除: {Path.GetFileName(tmpFile)}");
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogWarning($"[ProjectBackupManager] 一時ファイル削除失敗: {tmpFile}\n{e.Message}");
+                    }
+                }
+            }
         }
     }
 }
