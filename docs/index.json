@@ -6,6 +6,23 @@
   "packages": {
     "com.mutoulab.project-backup-manager": {
       "versions": {
+        "0.1.1": {
+          "name": "com.mutoulab.project-backup-manager",
+          "version": "0.1.1",
+          "displayName": "Project Backup Manager",
+          "description": "VRChatプロジェクト向け自動バックアップ・世代管理・復元ツール",
+          "unity": "2022.3",
+          "unityRelease": "22f1",
+          "author": {
+            "name": "MutouLab",
+            "url": "https://github.com/MutouLab"
+          },
+          "vpmDependencies": {},
+          "url": "https://github.com/MutouLab/ProjectBackupManager/releases/download/v0.1.1/com.mutoulab.project-backup-manager-0.1.1.zip",
+          "repo": "https://mutoulab.github.io/ProjectBackupManager/index.json",
+          "zipSHA256": "9023c0b7dd71e627a6475bed3b697319368d30e567df402443ff1132bf272c77",
+          "changelogUrl": "https://github.com/MutouLab/ProjectBackupManager/releases/tag/v0.1.1"
+        },
         "0.1.0": {
           "name": "com.mutoulab.project-backup-manager",
           "version": "0.1.0",
