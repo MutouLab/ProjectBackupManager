@@ -29,15 +29,20 @@ namespace MutouLab.ProjectBackupManager.Core
 
         /// <summary>
         /// 世代マニフェストディレクトリを作成する（存在しない場合）。
+        /// 前回クラッシュ等で残留した一時ファイルを削除する。
         /// </summary>
         public void EnsureInitialized()
         {
             if (!Directory.Exists(_generationsRoot))
                 Directory.CreateDirectory(_generationsRoot);
+
+            // 前回クラッシュで残留した一時ファイルを削除
+            CleanupTempFiles();
         }
 
         /// <summary>
         /// 世代マニフェストを保存する。
+        /// Write-Rename パターンにより書き込みのアトミック性を保証する。
         /// </summary>
         /// <param name="manifest">保存するマニフェスト。</param>
         public void Save(GenerationManifest manifest)
@@ -45,8 +50,14 @@ namespace MutouLab.ProjectBackupManager.Core
             EnsureInitialized();
             string fileName = FormatFileName(manifest);
             string filePath = Path.Combine(_generationsRoot, fileName);
+            string tempPath = filePath + ".tmp";
+
             string json = JsonUtility.ToJson(manifest, prettyPrint: true);
-            File.WriteAllText(filePath, json);
+            File.WriteAllText(tempPath, json);
+
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+            File.Move(tempPath, filePath);
         }
 
         /// <summary>
@@ -172,6 +183,28 @@ namespace MutouLab.ProjectBackupManager.Core
             var dto = DateTimeOffset.Parse(manifest.timestamp);
             string timeStr = dto.ToString("yyyyMMdd_HHmmss");
             return $"{timeStr}_{manifest.type}.json";
+        }
+
+        /// <summary>
+        /// 前回クラッシュ等で残留した一時ファイルを削除する。
+        /// </summary>
+        private void CleanupTempFiles()
+        {
+            if (!Directory.Exists(_generationsRoot))
+                return;
+
+            foreach (string tmpFile in Directory.GetFiles(_generationsRoot, "*.tmp"))
+            {
+                try
+                {
+                    File.Delete(tmpFile);
+                    Debug.Log($"[ProjectBackupManager] 残留一時ファイルを削除: {Path.GetFileName(tmpFile)}");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"[ProjectBackupManager] 一時ファイル削除失敗: {tmpFile}\n{e.Message}");
+                }
+            }
         }
     }
 }
