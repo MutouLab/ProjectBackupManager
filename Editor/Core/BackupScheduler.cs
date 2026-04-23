@@ -73,24 +73,20 @@ namespace MutouLab.ProjectBackupManager.Core
             _isPlayMode = state == PlayModeStateChange.EnteredPlayMode;
         }
 
-        private static bool _isBackupRunning;
-
         /// <summary>
         /// 自動バックアップをバックグラウンドで実行する。
         /// </summary>
         private static void ExecuteAutoBackup()
         {
-            if (_isBackupRunning)
+            if (BackupEngine.IsBackgroundBackupRunning)
                 return;
 
-            _isBackupRunning = true;
             LastBackupTime = DateTimeOffset.Now;
 
             string projectRoot = GetProjectRoot();
             var engine = new BackupEngine(projectRoot);
             engine.CreateBackupInBackground("auto", "自動バックアップ", () =>
             {
-                _isBackupRunning = false;
                 OnBackupCompleted?.Invoke();
             });
         }
