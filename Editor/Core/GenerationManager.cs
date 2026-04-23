@@ -158,7 +158,15 @@ namespace MutouLab.ProjectBackupManager.Core
                 Debug.Log($"[ProjectBackupManager] 世代を削除: {all[i].timestamp} ({all[i].type})");
             }
 
-            // 残存世代の参照ハッシュを収集
+            CollectGarbage();
+        }
+
+        /// <summary>
+        /// 未参照オブジェクトを削除する。
+        /// 全残存マニフェストの参照ハッシュを収集し、それ以外のオブジェクトを削除する。
+        /// </summary>
+        public void CollectGarbage()
+        {
             var remainingGenerations = LoadAll();
             var referencedHashes = new HashSet<string>();
             for (int i = 0; i < remainingGenerations.Count; i++)
@@ -167,7 +175,6 @@ namespace MutouLab.ProjectBackupManager.Core
                 referencedHashes.UnionWith(hashes);
             }
 
-            // 未参照オブジェクトを削除
             int removed = _contentStore.RemoveUnreferenced(referencedHashes);
             if (removed > 0)
             {

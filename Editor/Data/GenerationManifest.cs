@@ -61,7 +61,7 @@ namespace MutouLab.ProjectBackupManager.Data
         {
             for (int i = 0; i < files.Count; i++)
             {
-                if (files[i].path == relativePath)
+                if (string.Equals(files[i].path, relativePath, StringComparison.OrdinalIgnoreCase))
                     return files[i];
             }
             return null;

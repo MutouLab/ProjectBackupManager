@@ -377,8 +377,8 @@ Unityの予期せぬ終了によるデータ紛失を防止できます。
                 _restoreHeader.text = "復元";
             }
 
-            // プルーニング（GC）
-            _engine.Generations.Prune(BackupSettings.MaxGenerations);
+            // 削除した世代のオブジェクトをGC
+            _engine.Generations.CollectGarbage();
             RefreshGenerationList();
         }
 
